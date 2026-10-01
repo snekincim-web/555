@@ -1,0 +1,40 @@
+// index.js
+const { Client, GatewayIntentBits } = require('discord.js');
+
+const client = new Client({ 
+    intents: [
+        GatewayIntentBits.Guilds, 
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.MessageContent
+    ] 
+});
+
+const token = 'ТОКЕН_БОТА';
+
+client.on('ready', () => {
+    console.log(`Бот ${client.user.tag} запущен!`);
+});
+
+client.on('messageCreate', message => {
+    if (message.author.bot) return;
+    
+    if (message.content === '!ping') {
+        message.channel.send('Pong!');
+    }
+    
+    if (message.content === '!hello') {
+        message.reply('Привет!');
+    }
+    
+    if (message.content.startsWith('!say')) {
+        const args = message.content.split(' ').slice(1);
+        if (!args.length) {
+            return message.reply('Укажи текст!');
+        }
+        message.channel.send(args.join(' '));
+    }
+});
+
+client.login(token).catch(err => {
+    console.error('Ошибка логина:', err);
+});
